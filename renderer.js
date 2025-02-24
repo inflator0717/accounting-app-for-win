@@ -331,6 +331,7 @@ document.getElementById('query-form').addEventListener('submit', (event) => {
         row.insertCell(4).textContent = record[4]; // 金额
         row.insertCell(5).textContent = record[5]; // 银行卡
         row.insertCell(6).textContent = record[6]; // 标签
+        row.insertCell(7).textContent = record[7]; // 经办人
       });
   
     // 渲染统计结果
