@@ -15,7 +15,7 @@
     },
     "win": {
       "target": "nsis",
-      "icon": "build/icons/app图标.ico"
+      "icon": "build/icons/app.ico"
     },
     "mac": {
       "icon": "build/icons/app.icns"
