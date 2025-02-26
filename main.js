@@ -684,7 +684,34 @@ ipcMain.on('show-save-dialog', (event) => {
     }
   });
 
-  ipcMain.on('delete-record', (event, recordIndex, accountType) => {
+  // ipcMain.on('delete-record', (event, recordIndex, accountType) => {
+  //   //const filePath = path.join(__dirname, 'data.xlsx');
+  //   //const filePath = path.join(app.getAppPath(), 'data.xlsx'); // 使用 app.getAppPath() 获取应用的根路径
+  //   // 使用 process.resourcesPath 获取资源路径
+  //   const filePath = path.join(process.resourcesPath, 'data.xlsx');
+  //   if (fs.existsSync(filePath)) {
+  //   const wb = xlsx.readFile(filePath);
+  //   const sheetName = accountType === 'company' ? 'company_records' : 'family_records';
+  //   const ws = wb.Sheets[sheetName];
+  //   const records = xlsx.utils.sheet_to_json(ws, { header: 1 });
+  //     records.shift(); // 删除表头
+
+  //     if (recordIndex >= 0 && recordIndex < records.length) {
+  //       records.splice(recordIndex, 1); // 删除指定索引的记录
+
+  //       const newWs = xlsx.utils.aoa_to_sheet([["项目类别", "日期", "类型", "用途", "金额", "银行卡"], ...records]);
+  //       wb.Sheets['records'] = newWs;
+  //       xlsx.writeFile(wb, filePath);
+
+  //       event.reply('delete-record-success');
+  //     } else {
+  //       event.reply('delete-record-failure', '无效的记录索引');
+  //     }
+  //   } else {
+  //     event.reply('delete-record-failure', '数据文件不存在');
+  //   }
+  // });
+    ipcMain.on('delete-record', (event, recordIndex, accountType) => {
     //const filePath = path.join(__dirname, 'data.xlsx');
     //const filePath = path.join(app.getAppPath(), 'data.xlsx'); // 使用 app.getAppPath() 获取应用的根路径
     // 使用 process.resourcesPath 获取资源路径
