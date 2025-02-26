@@ -509,17 +509,34 @@ document.getElementById('delete-form').addEventListener('submit', (event) => {
     ipcRenderer.send('delete-record', recordIndex, selectedAccountType);
   });
   
-  ipcRenderer.on('records-data', (event, records) => {
-    const recordSelect = document.getElementById('record-select');
-    recordSelect.innerHTML = '';
+  // ipcRenderer.on('records-data', (event, records) => {
+  //   const recordSelect = document.getElementById('record-select');
+  //   recordSelect.innerHTML = '';
   
-    records.forEach((record, index) => {
-      const option = document.createElement('option');
-      option.value = index;
-      option.textContent = `${record[0]} - ${record[1]} - ${record[2]} - ${record[3]} - ${record[4]} - ${record[5]}`;
-      recordSelect.appendChild(option);
-    });
+  //   records.forEach((record, index) => {
+  //     const option = document.createElement('option');
+  //     option.value = index;
+  //     option.textContent = `${record[0]} - ${record[1]} - ${record[2]} - ${record[3]} - ${record[4]} - ${record[5]}`;
+  //     recordSelect.appendChild(option);
+  //   });
+  // });
+  // 获取记录并显示在下拉框中
+ipcRenderer.on('records-data', (event, records) => {
+  const recordSelect = document.getElementById('record-select');
+  recordSelect.innerHTML = '';
+
+  // 创建倒序副本
+  const reversedRecords = [...records].reverse(); // 创建倒序副本
+
+  reversedRecords.forEach((record, index) => {
+    const option = document.createElement('option');
+    option.value = index;  // 使用倒序后的索引
+    option.textContent = `${record[0]} - ${record[1]} - ${record[2]} - ${record[3]} - ${record[4]} - ${record[5]} - ${record[6]} - ${record[7]}`;
+    recordSelect.appendChild(option);
   });
+});
+
+
   
   ipcRenderer.on('delete-record-success', (event) => {
     alert('账目已成功删除');
