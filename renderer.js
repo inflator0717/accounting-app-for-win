@@ -540,7 +540,7 @@ ipcRenderer.on('records-data', (event, records) => {
   
   ipcRenderer.on('delete-record-success', (event) => {
     alert('账目已成功删除');
-    ipcRenderer.send('get-records'); // 更新记录列表
+    ipcRenderer.send('get-records', selectedAccountType); // 更新记录列表
   });
   
   ipcRenderer.on('delete-record-failure', (event, message) => {
