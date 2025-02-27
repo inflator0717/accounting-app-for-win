@@ -665,6 +665,7 @@ ipcMain.on('show-save-dialog', (event) => {
   //删除账目
   ipcMain.on('get-records', (event, accountType) => {
     //const filePath = path.join(__dirname, 'data.xlsx');
+    //const filePath = path.join(userDataPath, 'data.xlsx');
     //const filePath = path.join(app.getAppPath(), 'data.xlsx'); // 使用 app.getAppPath() 获取应用的根路径
     // 使用 process.resourcesPath 获取资源路径
     const filePath = path.join(process.resourcesPath, 'data.xlsx');
@@ -672,11 +673,8 @@ ipcMain.on('show-save-dialog', (event) => {
     const wb = xlsx.readFile(filePath);
     const sheetName = accountType === 'company' ? 'company_records' : 'family_records';
     const ws = wb.Sheets[sheetName];
-    let records = xlsx.utils.sheet_to_json(ws, { header: 1 });
+    const records = xlsx.utils.sheet_to_json(ws, { header: 1 });
       records.shift(); // 删除表头
-
-      // 按照录入账目的倒序排列
-    records = records.reverse();
 
       event.reply('records-data', records);
     } else {
@@ -711,25 +709,29 @@ ipcMain.on('show-save-dialog', (event) => {
   //     event.reply('delete-record-failure', '数据文件不存在');
   //   }
   // });
-    ipcMain.on('delete-record', (event, recordIndex, accountType) => {
-    //const filePath = path.join(__dirname, 'data.xlsx');
-    //const filePath = path.join(app.getAppPath(), 'data.xlsx'); // 使用 app.getAppPath() 获取应用的根路径
-    // 使用 process.resourcesPath 获取资源路径
+ ipcMain.on('delete-record', (event, recordIndex, accountType) => {
+    //const filePath = path.join(__dirname, 'data.xlsx'); // 使用合适的路径获取 data.xlsx 文件
     const filePath = path.join(process.resourcesPath, 'data.xlsx');
     if (fs.existsSync(filePath)) {
-    const wb = xlsx.readFile(filePath);
-    const sheetName = accountType === 'company' ? 'company_records' : 'family_records';
-    const ws = wb.Sheets[sheetName];
-    const records = xlsx.utils.sheet_to_json(ws, { header: 1 });
+      const wb = xlsx.readFile(filePath);
+      const sheetName = accountType === 'company' ? 'company_records' : 'family_records';
+      const ws = wb.Sheets[sheetName];
+      const records = xlsx.utils.sheet_to_json(ws, { header: 1 });
       records.shift(); // 删除表头
-
-      if (recordIndex >= 0 && recordIndex < records.length) {
-        records.splice(recordIndex, 1); // 删除指定索引的记录
-
-        const newWs = xlsx.utils.aoa_to_sheet([["项目类别", "日期", "类型", "用途", "金额", "银行卡"], ...records]);
-        wb.Sheets['records'] = newWs;
+  
+      // 将倒序索引转换为原始索引
+      const originalIndex = records.length - 1 - recordIndex;  // 反转索引，恢复原始顺序
+  
+      if (originalIndex >= 0 && originalIndex < records.length) {
+        records.splice(originalIndex, 1); // 删除指定索引的记录
+  
+        // 重新生成工作表并写回文件
+        const newWs = xlsx.utils.aoa_to_sheet([["项目类别", "日期", "类型", "用途", "金额", "银行卡", "标签", "经办人"], ...records]);
+        wb.Sheets[sheetName] = newWs; // 更新对应的工作表
+  
+        // 写回更新后的 Excel 文件
         xlsx.writeFile(wb, filePath);
-
+  
         event.reply('delete-record-success');
       } else {
         event.reply('delete-record-failure', '无效的记录索引');
